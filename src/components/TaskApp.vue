@@ -1,51 +1,82 @@
 <template>
-        <!-- <DataView :value="tasks " >
-            <div class="text-2xl font-bold text-900">{{ tasks }}</div>
-        </DataView> -->
-
-        <div style="margin: 0 auto; width: 80%;">
-            <TPanel header="TAGS">
-                <DataTable :value="tasks">
-                    <TColumn field="name" header="Nombre"></TColumn>
-                    <TColumn field="description" header="Descripcion"></TColumn>
-                    <TColumn field="status" header="Estado"></TColumn>
-                    <TColumn field="tags_tag_id" header="Etiqueta"></TColumn>
-                    <TColumn field="expiry_date" header="Fecha Limite"></TColumn>
-                    <!-- <p>{{ tasks }}</p> -->
-                </DataTable>
-
-            </TPanel>
+    <div style="margin: 0 auto; width: 60%;">
+        <TPanel header="TASKS">
+        <div class="card-container">
+    <div class="p-grid p-justify-center">
+        <div class="p-col-12 p-md-6 p-lg-4" v-for="task in tasks" :key="task.task_id">
+        <div class="task-card">
+        <div class="task-header">
+            <h3>{{ task.name }}</h3>
+            <span class="task-status">{{ task.status }}</span>
+            </div>
+            <div class="task-details">
+            <p class="task-description">{{ task.description }}</p>            
+            <span class="task-date">Fecha Límite: {{ task.expiry_date }}</span>
+            <div class="task-meta">
+                <span class="task-tag">Etiqueta: {{ task.tags_tag_id }}</span>
+                <Button @click="completarTarea(task.task_id)">Completar</Button>
+            </div>
+            
+            </div>
         </div>
-
-</template>
-<!-- <template>
-    <div class="card">
-        <DataView :value="task"> -->
-            <!-- <template #list="slotProps">
-                <div class="col-12">
-                    <div class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
-                        <div class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
-                            <div class="flex flex-column align-items-center sm:align-items-start gap-3">
-                                <div class="text-2xl font-bold text-900">{{ slotProps.data.name }}</div>
-                                <div class="flex align-items-center gap-3">
-                                    <span class="flex align-items-center gap-2">
-                                        <i class="pi pi-tag"></i> -->
-                                        <!-- <span class="font-semibold">{{ slotProps.data.description }}</span> -->
-                                    <!-- </span> -->
-                                    <!-- <Tag :value="slotProps.data.status" :severity="getSeverity(slotProps.data)"></Tag> -->
-                                <!-- </div>
-                            </div>
-                            <div class="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2"> -->
-                                <!-- <span class="text-2xl font-semibold">${{ slotProps.data.expiry_date }}</span> -->
-                                <!-- <Button icon="pi pi-shopping-cart" rounded :disabled="slotProps.data.inventoryStatus === 'OUTOFSTOCK'"></Button> -->
-                            <!-- </div>
-                        </div>
-                    </div>
-                </div>
-            </template> -->
-        <!-- </DataView>
+        </div>
     </div>
-</template> -->
+</div>
+        </TPanel>
+    </div>
+</template>
+
+<style scoped>
+.task-card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 10px;
+    background-color: #fff;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.task-header h3 {
+    font-size: 18px;
+    margin: 0;
+}
+
+.task-status {
+    font-weight: bold;
+    color: #4caf50; /* Color verde para Completado */
+}
+
+.task-details {
+    margin-top: 10px;
+}
+
+.task-description {
+    font-size: 14px;
+}
+
+.task-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+.task-tag {
+    color: #2196F3; /* Color azul para la etiqueta */
+    font-size: 15px;
+}
+
+.task-date {
+    color: #f44336; /* Color rojo para la fecha límite */
+    font-size: 14px;
+}
+</style>
+
 
 <script>
 // import TaskApp from './components/TaskApp.vue'
@@ -55,41 +86,42 @@ export default {
     data(){
         return {
             tasks: [],
-            // task : null,
-            // tasks: [],
-            // task: {
-            //     name: null,
-            //     // completed: false
-            // }
         }
     },
     taskService : null,
-    // methods: {
-    // itemTemplate(task) {
-    //     return `
-    //         <div>
-    //         <h3>${task.result.name}</h3>
-    //         </div>
-    //     `;
-    //     },
-    // },
     created(){
         this.taskService = new TaskService();
     },
-    mounted(){
-        this.taskService.getAll()
-            .then(data => {
-                this.tasks = data.data.result;
-                console.log(this.tasks);
-            })
-            .catch(error => {
-                console.log(error);
-            });
+    async mounted(){
+        const response = await this.taskService.getTasks();
+        this.tasks = response.result;
+        console.log(this.tasks);
+        // this.taskService.getAll()
+        //     .then(data => {
+        //         this.tasks = data.data.result;
+        //         console.log(this.tasks);
+        //     })
+        //     .catch(error => {
+        //         console.log(error);
+        //     });
     },
+    methods: {
+        completarTarea(task_id){
+            console.log(task_id);
+            this.taskService.completeTask(task_id)
+                .then(data => {
+                    console.log(data);
+                    this.tasks = this.tasks.filter(task => task.task_id != task_id);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
+    }   
 }
 
 </script>
 
-<style>
+<!-- <style scoped>
 
-</style>
+</style> -->
