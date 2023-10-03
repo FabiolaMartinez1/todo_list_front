@@ -15,26 +15,63 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+// import { ref } from 'vue';
+import LoginService from '../service/LoginService.js'; 
 
 export default {
-    setup() {
-        const nickname = ref('');
-        const password = ref('');
-        const login = () => {
-            console.log(nickname.value);
-            console.log(password.value);
-        // Aquí puedes hacer la llamada a tu servicio de inicio de sesión
-        // utilizando 'nickname.value' y 'password.value'
-        };
-
-        return {
-        nickname,
-        password,
-        login
-        };
+    name: 'LoginTodo',
+    data(){
+        return{
+            nickname: '',
+            password: ''
+        }
+    },
+    created(){
+        this.loginService = new LoginService();
+    },
+    methods:{
+        async login(){
+            console.log(this.nickname);
+            console.log(this.password);
+            
+            this.loginService.login(this.nickname, this.password).then((data)=>{
+                console.log(data);
+            }).catch(error=>{
+                console.log(error);
+            });
+            // console.log('Respuesta del servicio de inicio de sesión:', response);
+        
+            
+        }
+        },
+        
+        
     }
-};
+
+// import {LoginService} from '../service/LoginService.js'; 
+
+// export default {
+//     setup() {
+//         const nickname = ref('');
+//         const password = ref('');
+//         const login = async () => {
+//             console.log(nickname.value);
+//             console.log(password.value);
+//             try {
+//                 const response = await LoginService.login(nickname.value, password.value);
+//                 console.log('Respuesta del servicio de inicio de sesión:', response);
+//             } catch (error) {
+//                 console.error('Error al iniciar sesión:CTM', error);
+//             }
+//         };
+//         return {
+//             nickname,
+//             password,
+//             login
+//         };
+//     }
+// };
+
 </script>
 
 <style scoped>
@@ -43,24 +80,22 @@ export default {
     justify-content: center;
     align-items: center;
     height: 100vh;
-  }
-  
-  .card {
+}
+
+.card {
     width: 300px;
     text-align: center;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
-  }
-  
-  .card input {
+}
+.card input {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
-  }
-  
-  .card button {
+}
+
+.card button {
     width: 100%;
-  }
-  </style>
-  
+}
+</style>
