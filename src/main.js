@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
-// import Vue from 'vue'
 import App from './App.vue'
 import router from './router/router.js'
+import store from './store';
 
 import DataView from 'primevue/dataview';
 import DataViewLayoutOptions from 'primevue/dataviewlayoutoptions'
@@ -25,6 +25,7 @@ import 'primeflex/primeflex.css';
 
 const app = createApp(App)
 app.use(router);
+app.use(store);
 app.mount('#app');
 
 app.component('DataView', DataView);

@@ -34,14 +34,24 @@ export default {
             console.log(this.nickname);
             console.log(this.password);
             
-            this.loginService.login(this.nickname, this.password).then((data)=>{
+            // this.loginService.login(this.nickname, this.password, this.$store.commit).then((data)=>{
+            //     console.log(data);
+            // }).catch(error=>{
+            //     console.log(error);
+            // });
+            const loginService = new LoginService(this.$store);
+            try {
+                const data = await loginService.login(this.nickname, this.password);
                 console.log(data);
-            }).catch(error=>{
+
+                // Si la respuesta es exitosa, actualiza el estado directamente
+                this.$store.commit('setUserId', data.result.userId);
+
+                // Navega a la página de tareas
+                this.$router.push({ name: 'TaskList' });
+            } catch (error) {
                 console.log(error);
-            });
-            // console.log('Respuesta del servicio de inicio de sesión:', response);
-        
-            
+            }
         }
         },
         

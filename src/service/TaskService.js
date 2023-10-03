@@ -2,13 +2,13 @@
 
 export default class TaskService {
 
-    async getTasks() {
+    async getTasks(store) {
         const url = 'http://localhost:8081/api/v1/task';
-        const token = '1';
+        const token = store.getters.getUserId;
         const options = {
             method: 'GET',
             headers: {
-                Authorization: `${token}`,
+                Authorization: token,
                 Accept: 'application/json',
             }
         };

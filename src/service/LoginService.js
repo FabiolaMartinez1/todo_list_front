@@ -1,6 +1,10 @@
 import router from "@/router/router";
 
 export default class LoginService {
+    constructor(store) {
+        this.store = store;
+    }
+
     async login(nickname, password) {
         console.log('entro al login()'+'nickname', nickname);
         const url = 'http://localhost:8081/api/v1/login';
@@ -22,6 +26,9 @@ export default class LoginService {
             }
             const data = await response.json();
             console.log('data', data);
+            // const userId = data.result.userId;
+            // this.$store.commit('setUserId', userId);
+            // commit('setUserId', userId); 
             router.push({ name: 'TaskList' });
             return data;
         } catch (error) {

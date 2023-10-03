@@ -93,7 +93,7 @@ export default {
         this.taskService = new TaskService();
     },
     async mounted(){
-        const response = await this.taskService.getTasks();
+        const response = await this.taskService.getTasks(this.$store);
         this.tasks = response.result;
         console.log(this.tasks);
         // this.taskService.getAll()
