@@ -6,7 +6,7 @@
 
 <script>
 // import HelloWorld from './components/HelloWorld.vue'
-import TaskApp from './components/TaskApp.vue'
+import TaskApp from './components/TaskList.vue'
 
 export default {
   name: 'App',

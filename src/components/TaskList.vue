@@ -14,7 +14,7 @@
             <span class="task-date">Fecha Límite: {{ task.expiry_date }}</span>
             <div class="task-meta">
                 <span class="task-tag">Etiqueta: {{ task.tags_tag_id }}</span>
-                <Button @click="completarTarea(task.task_id)">Completar</Button>
+                <button @click="completarTarea(task.task_id)">Completar</button>
             </div>
             
             </div>
