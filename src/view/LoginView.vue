@@ -1,16 +1,17 @@
 <template>
     <div class="login-view">
-      <Login />
+      <LoginTodo />
     </div>
   </template>
   
   <script>
-  import Login from '../components/LoginTodo.vue';
+  import LoginTodo from '../components/LoginTodo.vue';
+// import Login from '../components/LoginTodo.vue';
   
   export default {
     components: {
-      Login
-    }
+    LoginTodo,
+}
   };
   </script>
   

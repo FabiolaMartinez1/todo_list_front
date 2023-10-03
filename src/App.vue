@@ -1,18 +1,23 @@
 <template>
   <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
   <!-- <HelloWorld msg="Welcome Fabi to Your Vue.js App :D"/> -->
-  <TaskApp/>
+  <!-- <TaskApp/> -->
+  <div>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
 // import HelloWorld from './components/HelloWorld.vue'
-import TaskApp from './components/TaskList.vue'
+// import TaskApp from './components/TaskList.vue'
+// import router from './router/router';
 
 export default {
   name: 'App',
-  components: {
-    TaskApp
-  }
+//   components: {
+//     // TaskApp,
+//     router
+// }
 }
 </script>
 
