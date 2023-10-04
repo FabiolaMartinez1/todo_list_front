@@ -1,6 +1,8 @@
 <template>
-    <div class="task-form-view">
-      <!-- <TaskForm @nueva-tarea="enviarTarea" /> -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  
+    <div>
+      <!-- <h1>Registrar nueva Tarea</h1> -->
       <TaskForm />
     </div>
   </template>
@@ -12,31 +14,5 @@
     components: {
       TaskForm
     },
-    // methods: {
-    //   enviarTarea(tarea) {
-    //     this.$store.dispatch("crearNuevaTarea", tarea);
-    //   }
-    // }
   };
   </script>
-
-<!-- <template>
-  <div>
-    <TaskForm @nueva-tarea="enviarTarea" />
-  </div>
-</template>
-
-<script>
-import TaskForm from "@/components/TaskForm.vue";
-
-export default {
-  components: {
-    TaskForm
-  },
-  methods: {
-    enviarTarea(tarea) {
-      this.$store.dispatch("crearNuevaTarea", tarea);
-    }
-  }
-};
-</script> -->

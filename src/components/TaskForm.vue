@@ -1,4 +1,6 @@
 <template>
+<div style="margin: 0 auto; width: 60%;">
+    <!-- <TPanel header="Nueva Tarea"> -->
   <div class="container mt-5">
     <div class="card">
       <div class="card-header text-center">
@@ -12,7 +14,7 @@
           </div>
           <div class="mb-3">
             <label for="status" class="form-label">Estado:</label>
-            <input v-model="task.status" type="text" class="form-control" id="status">
+            <input v-model="task.status" type="text" class="form-control" id="status" readonly>
           </div>
           <div class="mb-3">
             <label for="description" class="form-label">Descripción:</label>
@@ -27,11 +29,13 @@
             <input v-model="task.tags_tag_id" type="text" class="form-control" id="tagId">
           </div>
           <div class="d-grid">
-            <button @click.prevent="crearNuevaTarea" class="p-button p-button-primary">Crear Tarea</button>
+            <button @click.prevent="createNewTask" class="p-button p-button-primary">Crear Tarea</button>
           </div>
         </form>
       </div>
     </div>
+  </div>
+    <!-- </TPanel> -->
   </div>
 </template>
 
@@ -43,7 +47,7 @@ export default {
     return {
       task: {
         name: "",
-        status: "",
+        status: "Pendiente ",
         description: "",
         expiry_date: "",
         tags_tag_id: ""
@@ -52,32 +56,21 @@ export default {
   },
   created(){
         this.taskService = new TaskService();
-        
     },
-  async mounted(){
-        
-  },
+  // async mounted(){
+  // },
   methods: {
-    async crearNuevaTarea() {
-      // this.$emit("nueva-tarea", this.task);
-      // console.log("Crear tarea"+this.task);
-      // console.log(this.task.name+this.task.status+this.task.description+this.task.expiry_date+this.task.tags_tag_id);
-      // console.log("user: "+this.userId);
-
-      // const taskService = new TaskService(this.$store);
+    async createNewTask() {
       try {
-        // console.log(data);
         const userId = this.$store.getters['getUserId'];
         console.log("ID del usuario reconocido en taskForm : " + userId);
+        console.log("Task: "+this.task);
+        await this.taskService.createTask(this.task, userId);
+        // console.log(data);
 
-        console.log(this.task);
-        console.log(this.id);
-        // console.log(id);
-        const data = await this.taskService.createTask(this.task, userId);
-        console.log(data);
-        this.$store.commit('setUserId', data.result.userId);
+        this.$store.commit('setUserId', userId);
         const id = this.$store.getters['getUserId'];
-        console.log("ID del usuario reconocido en task : " + id);
+        console.log("ID del usuario reconocido para mandar a task : " + id);
         this.$router.push({ name: 'TaskList' });
       } catch (error) {
         console.error(error);        

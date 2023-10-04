@@ -2,7 +2,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LoginView from '../view/LoginView.vue';
 import TaskList from '../view/TaskListView.vue';
-import TaskForm from '../components/TaskForm.vue';
+import TaskForm from '../view/TaskFormView.vue';
 
 const routes = [
     {
