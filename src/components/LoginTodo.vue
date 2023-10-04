@@ -9,7 +9,7 @@
         <div class="mb-3">
             <input v-model="password" type="password" class="form-control" placeholder="Contraseña" />
         </div>
-        <button @click="login" class="btn btn-primary">Iniciar Sesión</button>
+        <button @click="login" class="p-button p-button-primary">Iniciar Sesión</button>
         </div>
     </div>
 </template>
@@ -46,11 +46,13 @@ export default {
 
                 // Si la respuesta es exitosa, actualiza el estado directamente
                 this.$store.commit('setUserId', data.result.userId);
+                const id = this.$store.getters['getUserId'];
+                console.log("ID del usuario reconocido en task : " + id);
 
                 // Navega a la página de tareas
                 this.$router.push({ name: 'TaskList' });
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
         }
         },
