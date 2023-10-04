@@ -1,5 +1,5 @@
 <template>
-    <div style="margin: 0 auto; width: 60%;">
+    <div style="margin: 0 auto; width: 70%;">
         <TPanel header="TASKS">
             <div class="card-container">
                 <div class="p-grid p-justify-center">
@@ -23,12 +23,7 @@
             </div>
         </TPanel>
         <div class="create-task-button-container">
-                <!-- <button @click="crearNuevaTarea" class="p-button p-button-primary">Crear Nueva Tarea</button> -->
-                
-                <button class="p-button p-button-primary">
-                    <TaskService @crear-tarea="crearNuevaTarea" />
-                    <router-link :to="{ name: 'NuevaTarea' }" class="btn btn-primary">Crear Nueva Tarea</router-link>
-            </button>
+            <button @click="newTask" class="p-button p-button-primary">Crear Nueva Tarea</button>
             </div>
     </div>
 </template>
@@ -64,37 +59,40 @@ export default {
         //     });
     },
     methods: {
-        completarTarea(task_id){
-            console.log(task_id);
-            this.taskService.completeTask(task_id)
-                .then(data => {
-                    console.log(data);
-                    this.tasks = this.tasks.filter(task => task.task_id != task_id);
-                })
-                .catch(error => {
-                    console.log(error);
-                });
+        newTask(){
+            this.$router.push({ name: 'TaskForm' });
         },
-        async crearNuevaTarea(nuevaTarea) {
-            try {
-            // Aquí puedes hacer la petición POST al servidor utilizando el TaskService
-            const response = await this.taskService.createTask(nuevaTarea);
+        // completarTarea(task_id){
+        //     console.log(task_id);
+        //     this.taskService.completeTask(task_id)
+        //         .then(data => {
+        //             console.log(data);
+        //             this.tasks = this.tasks.filter(task => task.task_id != task_id);
+        //         })
+        //         .catch(error => {
+        //             console.log(error);
+        //         });
+        // },
+        // async crearNuevaTarea(nuevaTarea) {
+        //     try {
+        //     // Aquí puedes hacer la petición POST al servidor utilizando el TaskService
+        //     const response = await this.taskService.createTask(nuevaTarea);
 
-            // Si la petición es exitosa, puedes actualizar tu lista de tareas
-            if (response.ok) {
-                // Vuelve a cargar la lista de tareas o agrega la nueva tarea a tu array local si lo deseas.
-                // Por ejemplo:
-                // this.tasks.push(response.data);
-                console.log('Nueva tarea creada con éxito:', response.data);
-            } else {
-                // Si hay un error en la petición, maneja el caso aquí.
-                console.error('Error al crear una nueva tarea:', response.error);
-            }
-        } catch (error) {
-            // Si ocurre algún error en el proceso de la petición, puedes manejarlo aquí.
-            console.error('Error al crear una nueva tarea:', error);
-        }
-        }
+        //     // Si la petición es exitosa, puedes actualizar tu lista de tareas
+        //     if (response.ok) {
+        //         // Vuelve a cargar la lista de tareas o agrega la nueva tarea a tu array local si lo deseas.
+        //         // Por ejemplo:
+        //         // this.tasks.push(response.data);
+        //         console.log('Nueva tarea creada con éxito:', response.data);
+        //     } else {
+        //         // Si hay un error en la petición, maneja el caso aquí.
+        //         console.error('Error al crear una nueva tarea:', response.error);
+        //     }
+        // } catch (error) {
+        //     // Si ocurre algún error en el proceso de la petición, puedes manejarlo aquí.
+        //     console.error('Error al crear una nueva tarea:', error);
+        // }
+        // }
     }   
 }
 

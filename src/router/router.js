@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import LoginView from '../view/LoginView.vue';
 import TaskList from '../view/TaskListView.vue';
 import TaskForm from '../view/TaskFormView.vue';
+import TagsList from '../view/TagsView.vue';
 
 const routes = [
     {
@@ -11,16 +12,21 @@ const routes = [
         component: LoginView
     },
     { 
-        path: '/tasks', 
+        path: '/task', 
         name: 'TaskList',
         component: TaskList 
     },
     {
-        path: '/tasks',
-        name: 'NuevaTarea',
+        path: '/task',
+        name: 'TaskForm',
         component: TaskForm,
         // component: () => import(/* webpackChunkName: "TaskForm" */ '../components/TaskForm.vue')
-    }
+    },
+    { 
+        path: '/tag', 
+        name: 'TagsList',
+        component: TagsList 
+    },
     
 ];
 

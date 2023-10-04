@@ -1,5 +1,5 @@
 <template>
-<div style="margin: 0 auto; width: 60%;">
+<div style="margin: 0 auto; width: 70%;">
     <!-- <TPanel header="Nueva Tarea"> -->
   <div class="container mt-5">
     <div class="card">
@@ -26,10 +26,16 @@
           </div>
           <div class="mb-3">
             <label for="tagId" class="form-label">ID de Etiqueta:</label>
-            <input v-model="task.tags_tag_id" type="text" class="form-control" id="tagId">
+            <div class="d-flex align-items-center mb-3">
+              <input v-model="task.tags_tag_id" type="text" class="form-control mr-2" id="tagId">
+              <button @click="newTag" class="btn btn-info">New</button>
+            </div>
+          </div>
+          <div class="d-grid mb-3">
+            <button @click.prevent="createNewTask" class="btn btn-primary">Guardar</button>
           </div>
           <div class="d-grid">
-            <button @click.prevent="createNewTask" class="p-button p-button-primary">Crear Tarea</button>
+            <button @click="closeForm" class="btn btn-secondary">Cancelar</button>
           </div>
         </form>
       </div>
@@ -70,11 +76,17 @@ export default {
 
         this.$store.commit('setUserId', userId);
         const id = this.$store.getters['getUserId'];
-        console.log("ID del usuario reconocido para mandar a task : " + id);
+        console.log("ID del usuario reconocido para mandar a task: " + id);
         this.$router.push({ name: 'TaskList' });
       } catch (error) {
         console.error(error);        
       }
+    },
+    newTag(){
+      this.$router.push({ name: 'TagsList' });
+    },
+    closeForm(){
+      this.$router.push({ name: 'TaskList' });
     }
   }
 };
