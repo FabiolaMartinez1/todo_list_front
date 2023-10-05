@@ -15,7 +15,9 @@
                                 <div class="task-meta">
                                     <!-- <span class="task-tag">Etiqueta: {{ task.tags_tag_id }}</span> -->
                                     <span class="task-tag">Etiqueta: {{ getTagName(task.tags_tag_id) }}</span>
-                                    <button @click="completarTarea(task.task_id)">Completar</button>
+                                    <!-- <button @click="completeTask(task)">Completar</button> -->
+                                    <button @click="toggleTaskStatus(task)" v-if="task.status === 'Pendiente'">Completar</button>
+                                    <button @click="toggleTaskStatus(task)" v-else>Marcar como pendiente</button>
                                 </div>  
                             </div>
                         </div>
@@ -32,6 +34,7 @@
 <script>
 import TaskService from '../service/TaskService.js';
 import TagService from '../service/TagService.js';
+// import router from '@/router/router';
 
 export default {
     name: 'TaskApp',
@@ -72,16 +75,28 @@ export default {
         newTask(){
             this.$router.push({ name: 'TaskForm' });
         },
-        completarTarea(task_id){
-            console.log(task_id);
-            this.taskService.completeTask(task_id)
-                .then(data => {
-                    console.log(data);
-                    this.tasks = this.tasks.filter(task => task.task_id != task_id);
-                })
-                .catch(error => {
-                    console.log(error);
-                });
+        async toggleTaskStatus(task){
+            console.log("tarea a completar: "+task);
+            try {
+                const userId = this.$store.getters['getUserId'];
+                console.log("ID del usuario reconocido en task : " + userId);
+
+                const updatedTask = {
+                    name: task.name,
+                    description: task.description,
+                    tags_tag_id: task.tags_tag_id,
+                    status:  task.status === 'Pendiente' ? 'Completado' : 'Pendiente', // Estado actualizado
+                    expiry_date: task.expiry_date,
+                    completion_date: new Date//().toISOString().split('T')[0] // Fecha de completado actual
+                };
+                console.log("datos actualizados: "+JSON.stringify(updatedTask));
+                await this.taskService.updateTask(task.task_id, updatedTask, userId);
+                console.log("tarea actualizada"+JSON.stringify(updatedTask));
+                // router.push({ name: 'TaskList' });
+                task.status = updatedTask.status;
+            } catch (error) {
+                console.error('Error al cambiar el estado de la tarea:', error);
+            }
         },
     }   
 }

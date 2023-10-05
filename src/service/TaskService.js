@@ -49,4 +49,29 @@ export default class TaskService {
             throw error;
         }
     }  
+    async updateTask(taskId, task, token) {
+        console.log('entro al updateTask()\n'+task+' ID'+taskId);
+        const url = `http://localhost:8081/api/v1/task/${taskId}`;
+        console.log('url', url);
+        const options = {
+            method: "PUT",
+            headers: {
+            "Content-Type": "application/json",
+            Authorization: token
+            },
+            body: JSON.stringify(task)
+        };
+        try {
+            const response = await fetch(url, options);
+            if (!response.ok) {
+                throw new Error(`HTTP error: Status ${response.status}`);
+            }
+            const data = await response.json();
+            console.log('Se actualizo data', data);
+            return data;
+        } catch (error) {
+            console.error("Error al actualizar la tarea:", error);
+            throw error;
+        }
+    }
 }
