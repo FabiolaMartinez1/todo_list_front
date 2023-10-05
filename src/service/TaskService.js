@@ -2,8 +2,14 @@
 
 export default class TaskService {
 
-    async getTasks(id) {
-        const url = 'http://localhost:8081/api/v1/task';
+    async getTasks(id, status) {
+        console.log('id', id);
+        var url = 'http://localhost:8081/api/v1/task';
+        console.log('status', status);
+        if (status) {
+            url += `?status=${status}`;
+        }
+        console.log('url', url);
         const token = id;
         const options = {
             method: 'GET',

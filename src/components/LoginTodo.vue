@@ -33,25 +33,26 @@ export default {
         async login(){
             console.log(this.nickname);
             console.log(this.password);
-            
-            // this.loginService.login(this.nickname, this.password, this.$store.commit).then((data)=>{
-            //     console.log(data);
-            // }).catch(error=>{
-            //     console.log(error);
-            // });
+
             const loginService = new LoginService(this.$store);
             try {
                 const data = await loginService.login(this.nickname, this.password);
                 console.log(data);
+                this.data = data.result;
+                if(data.code === 'TASK-000'){ 
+                    console.log("Usuario encontrado");
+                    this.$store.commit('setUserId', data.result.userId);
+                    const id = this.$store.getters['getUserId'];
+                    console.log("ID del usuario reconocido en task : " + id);
 
-                // Si la respuesta es exitosa, actualiza el estado directamente
-                this.$store.commit('setUserId', data.result.userId);
-                const id = this.$store.getters['getUserId'];
-                console.log("ID del usuario reconocido en task : " + id);
-
-                // Navega a la página de tareas
-                this.$router.push({ name: 'TaskList' });
+                    this.$router.push({ name: 'TaskList' });
+                }else{
+                    console.log("Usuario no encontrado");
+                    this.$router.push({ name: 'LoginView' });
+                    // return;
+                }
             } catch (error) {
+                
                 console.error(error);
             }
         }

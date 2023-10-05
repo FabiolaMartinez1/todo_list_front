@@ -1,9 +1,26 @@
 <template>
+
+<div class="row mx-3">
+    <div class="col-md-6">
+    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+        <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" v-model="selectedFilter" value="all" checked>
+        <label class="btn btn-outline-primary" for="option1">Todas</label>
+
+        <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off" v-model="selectedFilter" value="pending">
+        <label class="btn btn-outline-primary" for="option2">Pendientes</label>
+
+        <input type="radio" class="btn-check" name="options" id="option4" autocomplete="off" v-model="selectedFilter" value="completed">
+        <label class="btn btn-outline-primary" for="option4">Completadas</label>
+    </div>
+</div>
+</div>
+
+<br>
     <div style="margin: 0 auto; width: 70%;">
         <TPanel header="TASKS">
             <div class="card-container">
                 <div class="p-grid p-justify-center">
-                    <div class="p-col-12 p-md-6 p-lg-4" v-for="task in tasks" :key="task.task_id">
+                    <div class="" v-for="task in tasks" :key="task.task_id">
                         <div class="task-card">
                             <div class="task-header">
                                 <h3>{{ task.name }}</h3>
@@ -45,6 +62,7 @@ export default {
         return {
             tasks: [],
             tags: [],
+            selectedFilter: 'all',
         }
     },
     taskService : null,
@@ -59,7 +77,7 @@ export default {
         console.log("ID del usuario reconocido en task : " + userId);
             try {
                 const [tasks, tags] = await Promise.all([
-                    this.taskService.getTasks(userId),
+                    this.taskService.getTasks(userId,null),
                     this.tagService.getTags(userId),
                 ]);
                 this.tasks = tasks.result;
@@ -97,11 +115,44 @@ export default {
                 console.log("tarea actualizada"+JSON.stringify(updatedTask));
                 // router.push({ name: 'TaskList' });
                 task.status = updatedTask.status;
+                this.filterTasks();
             } catch (error) {
                 console.error('Error al cambiar el estado de la tarea:', error);
             }
         },
-    }   
+        async filterTasks() {
+            const userId = this.$store.getters['getUserId'];
+            try {
+                switch(this.selectedFilter) {
+                    case 'all':
+                        var response = await this.taskService.getTasks(userId,null);
+                        this.tasks = response.result;
+                        break;
+                    case 'pending':
+                        var response1 = await this.taskService.getTasks(userId,"Pendiente");
+                        this.tasks = response1.result;
+                        break;
+                    case 'completed':
+                        var response2 = await this.taskService.getTasks(userId,"Completado");
+                        this.tasks = response2.result;
+                        break;
+                    default:
+                        // En caso de un filtro no reconocido, obtén todas las tareas
+                        this.tasks = await this.taskService.getTasks(userId,null);
+                        break;
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+    },  
+    watch: {
+        selectedFilter: {
+            handler: 'filterTasks',
+            immediate: true // Esto lo hará ejecutar inmediatamente cuando el componente se monte
+        }
+}
+
 }
 
 </script>
