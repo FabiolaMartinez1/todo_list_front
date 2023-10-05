@@ -92,13 +92,9 @@ export default {
   methods: {
     addNewTag() {
       this.tempTags.push({ name: '', new: true });
-      //TODO: Agregar a la base de datos
     },
     deleteTag(index) {
-      const tag = this.tempTags[index];
-      if (!tag.new) {
-        //TODO Eliminar de la base de datos si no es una nueva etiqueta
-      }
+      // const tag = this.tempTags[index];
       this.tempTags.splice(index, 1);
     },
     deleteNewTag(index) {
@@ -146,7 +142,7 @@ export default {
       for (const tag of this.tempTags) {
       if (tag.tag_id) {
         console.log("tagIDE "+JSON.stringify(tag));
-        await this.tagService.updateTag(tag.tag_id, { name: tag.name }, userId); //TODO mandar token
+        await this.tagService.updateTag(tag.tag_id, { name: tag.name }, userId);
       } else {
         console.log("creando tag: "+tag.name+" "+userId);
         await this.tagService.createTag({ name: tag.name },userId);
@@ -159,7 +155,7 @@ export default {
     for (const tag of tagsToDelete) {
       console.log("se borrara: "+tag.tag_id+" "+tag.name+" "+userId);
       this.confirmDeleteTag(tag);
-      // await this.tagService.deleteTag(tag.tag_id, userId);//TODO mandar token
+      // await this.tagService.deleteTag(tag.tag_id, userId);
     }
     // confirmDeleteTag(tag);
 

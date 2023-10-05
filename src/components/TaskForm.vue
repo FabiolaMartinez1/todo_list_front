@@ -82,6 +82,12 @@ export default {
         const response = await this.tagService.getTags(userId);
         this.tags = response.result;
         console.log(this.tags);
+
+        const tareaGuardada = JSON.parse(localStorage.getItem('nuevaTarea'));
+        console.log("Tarea guardada en el local: "+tareaGuardada);
+        if (tareaGuardada) {
+          this.task = tareaGuardada;
+        }
   },
   methods: {
     async createNewTask() {
@@ -102,12 +108,16 @@ export default {
       } catch (error) {
         console.error(error);        
       }
+      localStorage.removeItem('nuevaTarea');
     },
     newTag(){
+      localStorage.setItem('nuevaTarea', JSON.stringify(this.task));
+      console.log("Task creada: "+JSON.stringify(this.task));
+      console.log("Task creada: "+this.task);
       this.$router.push({ name: 'TagsList' });
     },
     closeForm(){
-      // localStorage.removeItem('savedTask');
+      localStorage.removeItem('nuevaTarea');
       this.$router.push({ name: 'TaskList' });
     }
   }

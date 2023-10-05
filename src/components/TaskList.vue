@@ -16,8 +16,11 @@
                                     <!-- <span class="task-tag">Etiqueta: {{ task.tags_tag_id }}</span> -->
                                     <span class="task-tag">Etiqueta: {{ getTagName(task.tags_tag_id) }}</span>
                                     <!-- <button @click="completeTask(task)">Completar</button> -->
-                                    <button @click="toggleTaskStatus(task)" v-if="task.status === 'Pendiente'">Completar</button>
-                                    <button @click="toggleTaskStatus(task)" v-else>Marcar como pendiente</button>
+                                    <!-- <button @click="toggleTaskStatus(task)" v-if="task.status === 'Pendiente'">Completar</button>
+                                    <button @click="toggleTaskStatus(task)" v-else>Marcar como pendiente</button> -->
+                                    <button @click="toggleTaskStatus(task)">
+                                    {{ task.status === 'Completado' ? 'Marcar como pendiente' : 'Completar' }}
+                                    </button>
                                 </div>  
                             </div>
                         </div>
