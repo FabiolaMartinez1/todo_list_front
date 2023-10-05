@@ -91,6 +91,9 @@ export default class TagService {
                 throw new Error(`HTTP error: Status ${response.status}`);
             }
             const data = await response.json();
+            console.log("se elimino: "+data);
+            console.log("se elimino: "+data.message);
+            
             return data;
         } catch (error) {
             console.error("Error al eliminar una nueva tarea SV:", error);
