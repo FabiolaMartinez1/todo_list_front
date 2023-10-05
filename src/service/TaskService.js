@@ -23,8 +23,8 @@ export default class TaskService {
             console.error('Error al obtener las tareas:', error);
         }
     }
-    async createTask(tarea, token) {
-        console.log('entro al createTask()\n'+tarea);
+    async createTask(task, token) {
+        console.log('entro al createTask()\n'+task);
         const url = "http://localhost:8081/api/v1/task";
         const options = {
             method: "POST",
@@ -33,7 +33,7 @@ export default class TaskService {
             "Content-Type": "application/json",
             Authorization: token
             },
-            body: JSON.stringify(tarea)
+            body: JSON.stringify(task)
         };
         console.log('options', options);
         try {

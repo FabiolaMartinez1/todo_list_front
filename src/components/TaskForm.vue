@@ -1,6 +1,5 @@
 <template>
 <div style="margin: 0 auto; width: 70%;">
-    <!-- <TPanel header="Nueva Tarea"> -->
   <div class="container mt-5">
     <div class="card">
       <div class="card-header text-center">
@@ -51,7 +50,6 @@
       </div>
     </div>
   </div>
-    <!-- </TPanel> -->
   </div>
 </template>
 
@@ -93,6 +91,7 @@ export default {
         console.log("Task: "+this.task);
         console.log("Task tagId: "+this.task.tags_tag_id);
         await this.taskService.createTask(this.task, userId);
+        console.log("Task creada: "+JSON.stringify(this.task));
         //Guardar datos en el LocalStorage
         // localStorage.setItem('savedTask', JSON.stringify(this.task));
 

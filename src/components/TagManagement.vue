@@ -8,8 +8,8 @@
         </div>
         <div class="card-body">
           <div
-            v-for= "(tag, index) in tags"
-            :key="tag.id"
+            v-for= "(tag, index) in tempTags"
+            :key="tag.tag_id"
             class="d-flex align-items-center mb-2"
           >
             <input
@@ -48,68 +48,81 @@
 
 <script>
 
+import router from '@/router/router';
 import TagService from '../service/TagService.js';
 
 export default {
   name: 'TagManagement',
   data() {
     return {
-      tags: [
-        // { id: 1, name: 'Etiqueta 1', new: false },
-        // { id: 2, name: 'Etiqueta 2', new: false },
-        // { id: 3, name: 'Etiqueta 3', new: false },
-      ],
-      newTag: '',
+      tags: [],
+      tempTags: [],
+      editing:false,
     };
   },
   created(){
         this.tagService = new TagService();
-        //Recuperar datos del LocalStorage si existen
-        // const savedTags = JSON.parse(localStorage.getItem('savedTags'));
-        // if (savedTags) {
-        //   this.tags = savedTags;
-        // }
     },
     async mounted(){
-        const id = this.$store.getters['getUserId'];
-        console.log("ID del usuario reconocido en tagsMa : " + id);
-        const response = await this.tagService.getTags(id);
+        const userId = this.$store.getters['getUserId'];
+        console.log("ID del usuario reconocido en tagsMa : " + userId);
+        const response = await this.tagService.getTags(userId);
         this.tags = response.result;
-        console.log(this.tags);
-        // this.taskService.getAll()
-        //     .then(data => {
-        //         this.tasks = data.data.result;
-        //         console.log(this.tasks);
-        //     })
-        //     .catch(error => {
-        //         console.log(error);
-        //     });
+        console.log("t"+JSON.stringify(this.tags));
+        this.tempTags = JSON.parse(JSON.stringify(this.tags));
+        console.log("tt"+JSON.stringify(this.tempTags));
     },
   methods: {
     addNewTag() {
-      this.tags.push({ name: '', new: true });
+      this.tempTags.push({ name: '', new: true });
+      //TODO: Agregar a la base de datos
     },
     deleteTag(index) {
-      const tag = this.tags[index];
+      const tag = this.tempTags[index];
       if (!tag.new) {
-        // Eliminar de la base de datos si no es una nueva etiqueta
-        // ...
+        //TODO Eliminar de la base de datos si no es una nueva etiqueta
       }
-      this.tags.splice(index, 1);
+      this.tempTags.splice(index, 1);
     },
     deleteNewTag(index) {
-      this.tags.splice(index, 1);
+      this.tempTags.splice(index, 1);
     },
-    saveTags() {
-      // Guardar en la base de datos
-      // ...
-      // localStorage.setItem('savedTags', JSON.stringify(this.tags));
-      this.tags.forEach((tag) => (tag.editable = false));
+    async saveTags() {
+      const userId = this.$store.getters['getUserId'];
+      console.log("userID save : " + userId);
+      for (const tag of this.tempTags) {
+      if (tag.tag_id) {
+        console.log("tagIDE "+JSON.stringify(tag));
+        await this.tagService.updateTag(tag.tag_id, { name: tag.name }, userId); //TODO mandar token
+      } else {
+        console.log("creando tag: "+tag.name+" "+userId);
+        await this.tagService.createTag({ name: tag.name },userId);
+        
+      }
+    }
+
+    // Elimina las etiquetas que no están en tempTags
+    const tagsToDelete = this.tags.filter(tag => !this.tempTags.some(tempTag => tempTag.tag_id === tag.tag_id));
+    for (const tag of tagsToDelete) {
+      console.log("se borrara: "+tag.tag_id+" "+tag.name+" "+userId);
+      await this.tagService.deleteTag(tag.tag_id, userId);//TODO mandar token
+    }
+
+
+      console.log("A tags"+JSON.stringify(this.tags));
+      console.log("A tempTags"+JSON.stringify(this.tempTags));
+      this.editing = false; // Se ha terminado la edición
+      this.tags = [...this.tempTags]; // Actualiza tags con tempTags
+      console.log("D tags"+JSON.stringify(this.tags));
+      console.log("D tempTags"+JSON.stringify(this.tempTags));
+      router.push({ name: 'TaskForm' });
     },
     cancelEdit() {
-      this.tags = this.tags.filter((tag) => !tag.new);
-      this.tags.forEach((tag) => (tag.editable = false));
-      // localStorage.removeItem('savedTags');
+      this.editing = false; // Se ha terminado la edición
+      JSON.parse(JSON.stringify(this.tags));
+      // this.tags.forEach((tag) => (tag.editable = false));
+      console.log("tags C"+JSON.stringify(this.tags));
+      console.log("temp C"+JSON.stringify(this.tempTags));
       this.$router.push({ name: 'TaskForm' });
     },
   },
