@@ -64,6 +64,11 @@ export default {
   },
   created(){
         this.tagService = new TagService();
+        //Recuperar datos del LocalStorage si existen
+        // const savedTags = JSON.parse(localStorage.getItem('savedTags'));
+        // if (savedTags) {
+        //   this.tags = savedTags;
+        // }
     },
     async mounted(){
         const id = this.$store.getters['getUserId'];
@@ -98,11 +103,13 @@ export default {
     saveTags() {
       // Guardar en la base de datos
       // ...
+      // localStorage.setItem('savedTags', JSON.stringify(this.tags));
       this.tags.forEach((tag) => (tag.editable = false));
     },
     cancelEdit() {
       this.tags = this.tags.filter((tag) => !tag.new);
       this.tags.forEach((tag) => (tag.editable = false));
+      // localStorage.removeItem('savedTags');
       this.$router.push({ name: 'TaskForm' });
     },
   },

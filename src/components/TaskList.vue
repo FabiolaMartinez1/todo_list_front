@@ -13,7 +13,8 @@
                                 <p class="task-description">{{ task.description }}</p>            
                                 <span class="task-date">Fecha Límite: {{ task.expiry_date }}</span>
                                 <div class="task-meta">
-                                    <span class="task-tag">Etiqueta: {{ task.tags_tag_id }}</span>
+                                    <!-- <span class="task-tag">Etiqueta: {{ task.tags_tag_id }}</span> -->
+                                    <span class="task-tag">Etiqueta: {{ getTagName(task.tags_tag_id) }}</span>
                                     <button @click="completarTarea(task.task_id)">Completar</button>
                                 </div>  
                             </div>
@@ -29,70 +30,59 @@
 </template>
 
 <script>
-// import TaskApp from './components/TaskApp.vue'
 import TaskService from '../service/TaskService.js';
+import TagService from '../service/TagService.js';
 
 export default {
     name: 'TaskApp',
     data(){
         return {
             tasks: [],
+            tags: [],
         }
     },
     taskService : null,
+    tagService : null,
     created(){
         this.taskService = new TaskService();
+        this.tagService = new TagService();
     },
     async mounted(){
-        const id = this.$store.getters['getUserId'];
-        console.log("ID del usuario reconocido en task : " + id);
-        const response = await this.taskService.getTasks(id);
-        this.tasks = response.result;
-        console.log(this.tasks);
-        // this.taskService.getAll()
-        //     .then(data => {
-        //         this.tasks = data.data.result;
-        //         console.log(this.tasks);
-        //     })
-        //     .catch(error => {
-        //         console.log(error);
-        //     });
+        
+        const userId = this.$store.getters['getUserId'];
+        console.log("ID del usuario reconocido en task : " + userId);
+            try {
+                const [tasks, tags] = await Promise.all([
+                    this.taskService.getTasks(userId),
+                    this.tagService.getTags(userId),
+                ]);
+                this.tasks = tasks.result;
+                console.log(this.tasks);
+                this.tags = tags.result;
+                console.log(this.tags);
+            } catch (error) {
+                console.error(error);
+            }
     },
     methods: {
+        getTagName(tagId) {
+            const tag = this.tags.find(tag => tag.tag_id === tagId);
+            return tag ? tag.name : '*Sin etiqueta*';
+        },
         newTask(){
             this.$router.push({ name: 'TaskForm' });
         },
-        // completarTarea(task_id){
-        //     console.log(task_id);
-        //     this.taskService.completeTask(task_id)
-        //         .then(data => {
-        //             console.log(data);
-        //             this.tasks = this.tasks.filter(task => task.task_id != task_id);
-        //         })
-        //         .catch(error => {
-        //             console.log(error);
-        //         });
-        // },
-        // async crearNuevaTarea(nuevaTarea) {
-        //     try {
-        //     // Aquí puedes hacer la petición POST al servidor utilizando el TaskService
-        //     const response = await this.taskService.createTask(nuevaTarea);
-
-        //     // Si la petición es exitosa, puedes actualizar tu lista de tareas
-        //     if (response.ok) {
-        //         // Vuelve a cargar la lista de tareas o agrega la nueva tarea a tu array local si lo deseas.
-        //         // Por ejemplo:
-        //         // this.tasks.push(response.data);
-        //         console.log('Nueva tarea creada con éxito:', response.data);
-        //     } else {
-        //         // Si hay un error en la petición, maneja el caso aquí.
-        //         console.error('Error al crear una nueva tarea:', response.error);
-        //     }
-        // } catch (error) {
-        //     // Si ocurre algún error en el proceso de la petición, puedes manejarlo aquí.
-        //     console.error('Error al crear una nueva tarea:', error);
-        // }
-        // }
+        completarTarea(task_id){
+            console.log(task_id);
+            this.taskService.completeTask(task_id)
+                .then(data => {
+                    console.log(data);
+                    this.tasks = this.tasks.filter(task => task.task_id != task_id);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
     }   
 }
 

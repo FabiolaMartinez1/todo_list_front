@@ -12,7 +12,7 @@ const routes = [
         component: LoginView
     },
     { 
-        path: '/task', 
+        path: '/tasks', 
         name: 'TaskList',
         component: TaskList 
     },
