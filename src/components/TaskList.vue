@@ -4,13 +4,13 @@
     <div class="col-md-6">
     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
         <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" v-model="selectedFilter" value="all" checked>
-        <label class="btn btn-outline-primary" for="option1">Todas</label>
+        <label  class="btn btn-outline-info" for="option1">Todas</label>
 
         <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off" v-model="selectedFilter" value="pending">
-        <label class="btn btn-outline-primary" for="option2">Pendientes</label>
+        <label class="btn btn-outline-info" for="option2">Pendientes</label>
 
         <input type="radio" class="btn-check" name="options" id="option4" autocomplete="off" v-model="selectedFilter" value="completed">
-        <label class="btn btn-outline-primary" for="option4">Completadas</label>
+        <label class="btn btn-outline-info" for="option4">Completadas</label>
     </div>
 </div>
 </div>
@@ -35,10 +35,17 @@
                                     <!-- <button @click="completeTask(task)">Completar</button> -->
                                     <!-- <button @click="toggleTaskStatus(task)" v-if="task.status === 'Pendiente'">Completar</button>
                                     <button @click="toggleTaskStatus(task)" v-else>Marcar como pendiente</button> -->
-                                    <button @click="toggleTaskStatus(task)">
+                                    
+                                </div>  
+                                <div class="task-meta">
+                                    <button class="btn btn-outline-dark btn-sm mr-2" ><i class="bi bi-pencil-fill"></i> Editar</button>
+                                
+                                    <button @click="toggleTaskStatus(task)"  class="btn btn-info btn-sm mr-2" style="background-color: #37bcb1cd">
+                                        <!-- style="background-color: #37bcb1" -->
                                     {{ task.status === 'Completado' ? 'Marcar como pendiente' : 'Completar' }}
                                     </button>
-                                </div>  
+                                    
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -46,7 +53,7 @@
             </div>
         </TPanel>
         <div class="create-task-button-container">
-            <button @click="newTask" class="p-button p-button-primary">Crear Nueva Tarea</button>
+            <button @click="newTask" class="p-button p-button-primary" style="background-color: #0A0148">Crear Nueva Tarea</button>
             </div>
     </div>
 </template>
@@ -81,7 +88,7 @@ export default {
                     this.tagService.getTags(userId),
                 ]);
                 this.tasks = tasks.result;
-                console.log(this.tasks);
+                console.log("al montar: "+this.tasks);
                 this.tags = tags.result;
                 console.log(this.tags);
             } catch (error) {
@@ -211,4 +218,17 @@ export default {
     text-align: center;
     margin-top: 20px;
 }
+/*
+.btn-outline-purple {
+  color: #800080;
+  background-color: #800080;  Puedes cambiar este valor al tono de morado que prefieras 
+  border-color: #800080; El mismo color que el fondo 
+}
+
+.btn-outline-purple:hover {
+  background-color: #6a006a; Cambia el color del botón cuando se pasa el mouse 
+  border-color: #6a006a;
+}*/
+
+
 </style>

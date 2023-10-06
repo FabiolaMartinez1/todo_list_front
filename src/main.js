@@ -8,11 +8,6 @@ import DataViewLayoutOptions from 'primevue/dataviewlayoutoptions'
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Panel from 'primevue/panel';
-// import { InputText } from 'primevue/inputtext';
-// import { Password } from 'primevue/password';
-// import { Button } from 'primevue/button';
-// import { Card } from 'primevue/card';
-// import { Panel } from 'primevue/panel';
 
 import 'primevue/resources/themes/saga-blue/theme.css';
 import 'primevue/resources/primevue.min.css';

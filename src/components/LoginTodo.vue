@@ -9,7 +9,7 @@
         <div class="mb-3">
             <input v-model="password" type="password" class="form-control" placeholder="Contraseña" />
         </div>
-        <button @click="login" class="p-button p-button-primary">Iniciar Sesión</button>
+        <button @click="login" class="p-button p-button-primary" style="background-color: #37bcb1">Iniciar Sesión</button>
         </div>
     </div>
 </template>

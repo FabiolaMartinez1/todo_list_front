@@ -1,32 +1,5 @@
 <template>
-  <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-  <!-- <HelloWorld msg="Welcome Fabi to Your Vue.js App :D"/> -->
-  <!-- <TaskApp/> -->
-  <!-- <nav>
-    <router-link to="/">Log In</router-link> |
-    <router-link to="/home">Home</router-link> |
-    <router-link to="/tag">My tags</router-link> |
-    <router-link to="/archive">Archive</router-link> |
-    <router-link to="/about">About</router-link> | 
-    <router-link to="/contact">Contact</router-link>
-  </nav>
-
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-link active" aria-current="page" href="#">Home</a>
-        <a class="nav-link" href="#">Features</a>
-        <a class="nav-link" href="#">Pricing</a>
-      </div>
-    </div>
-  </div>
-</nav> -->
-<nav  style="background-color: #181e42" class="navbar navbar-expand-lg navbar-dark">
+<nav style="background-color: #0A0148" class="navbar navbar-expand-lg navbar-dark">
   <div class="container-fluid">
     <router-link to="/tasks" class="navbar-brand">Tasks</router-link>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">

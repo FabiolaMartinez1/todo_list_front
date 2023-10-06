@@ -31,15 +31,17 @@
               Eliminar
             </button>
           </div>
-          <button @click="addNewTag" class="btn btn-success mr-2">
-            Nuevo
-          </button>
-          <button @click="saveTags" class="btn btn-primary mr-2">
-            Guardar
-          </button>
-          <button @click="cancelEdit" class="btn btn-secondary">
-            Cerrar
-          </button>
+          <div class="d-flex justify-content-center">
+            <button @click="addNewTag" class="btn btn-success mr-2" style="background-color: #2eae85">
+              Nuevo
+            </button>
+            <button @click="saveTags" class="btn btn-info mr-2">
+              Guardar
+            </button>
+            <button @click="cancelEdit" class="btn btn-secondary" style="background-color: #0A0148">
+              Cerrar
+            </button>
+          </div>
         </div>
       </div>
     </div>
