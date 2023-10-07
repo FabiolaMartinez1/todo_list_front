@@ -1,3 +1,4 @@
+<!-- //TODO Modificar tareas -->
 <template>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 <div style="margin: 0 auto; width: 70%;">
@@ -7,7 +8,7 @@
         <h1>Nueva Tarea</h1>
       </div>
       <div class="card-body">
-        <form class="was-validated" @submit.prevent="createNewTask" >
+        <form @submit.prevent="createNewTask" >
           <div class="mb-3 form-group">
             <div class="mb-3">
               <label for="name" class="form-label">Nombre:</label>
@@ -19,7 +20,7 @@
             </div>
             <div class="mb-3">
               <label for="description" class="form-label">Descripción:</label>
-              <textarea v-model="task.description" class="form-control" id="description" required="required"></textarea>
+              <textarea v-model="task.description" class="form-control" id="description"></textarea>
             </div>
             <div class="mb-3">
               <label for="expiryDate" class="form-label">Fecha de Vencimiento:</label>
@@ -53,6 +54,7 @@
 <script>
 import TaskService from '../service/TaskService.js'; 
 import TagService from '../service/TagService.js';
+import Swal from 'sweetalert2'
 
 export default {
   data() {
@@ -93,7 +95,7 @@ export default {
         console.log("ID del usuario reconocido en taskForm : " + userId);
         console.log("Task: "+this.task);
         console.log("Task tagId: "+this.task.tags_tag_id);
-        
+
         const date_in_utc = this.convert_to_utc(this.task.expiry_date, 'America/La_Paz');
         this.task.expiry_date = date_in_utc.toISOString().split('T')[0];
         console.log("Task creadaUTC: "+JSON.stringify(this.task.expiry_date));
@@ -103,8 +105,22 @@ export default {
         this.$store.commit('setUserId', userId);
         const id = this.$store.getters['getUserId'];
         console.log("ID del usuario reconocido para mandar a task: " + id);
+        Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Tarea creada exitosamente',
+                        showConfirmButton: true,
+                        timer: 1500
+                        })
         this.$router.push({ name: 'TaskList' });
       } catch (error) {
+        Swal.fire({
+                        icon: 'error',
+                        title: 'Error al crear la tarea',
+                        text: 'Por favor intente de nuevo',
+                        showConfirmButton: true,
+                        timer: 1500
+                        })
         console.error(error);        
       }
       localStorage.removeItem('nuevaTarea');

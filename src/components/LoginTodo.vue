@@ -1,22 +1,25 @@
-
+<!-- //TODO paginar tareas -->
 <template>
-    <div class="login-container">
-        <div class="card">
-        <h1 class="mb-4">Iniciar Sesión</h1>
-        <div class="mb-3">
-            <input v-model="nickname" type="text" class="form-control" placeholder="Nombre de Usuario" />
+    <form @submit.prevent="login">
+        <div class="login-container">
+            <div class="card">
+            <i class="icon fa fa-user-circle"></i>
+            <h2 class="mb-4">Iniciar Sesión</h2>
+            <div class="mb-3">
+                <input v-model="nickname" type="text" class="form-control" placeholder="Nombre de Usuario" required="required"/>
+            </div>
+            <div class="mb-3">
+                <input v-model="password" type="password" class="form-control" placeholder="Contraseña" required="required"/>
+            </div>
+            <button type="submit" class="p-button p-button-primary" style="background-color: #37bcb1">Iniciar Sesión</button>
+            </div>
         </div>
-        <div class="mb-3">
-            <input v-model="password" type="password" class="form-control" placeholder="Contraseña" />
-        </div>
-        <button @click="login" class="p-button p-button-primary" style="background-color: #37bcb1">Iniciar Sesión</button>
-        </div>
-    </div>
+    </form>
 </template>
 
 <script>
-// import { ref } from 'vue';
 import LoginService from '../service/LoginService.js'; 
+import Swal from 'sweetalert2'
 
 export default {
     name: 'LoginTodo',
@@ -40,6 +43,14 @@ export default {
                 console.log(data);
                 this.data = data.result;
                 if(data.code === 'TASK-000'){ 
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Login Exitoso',
+                        text: 'Bienvenid@ '+this.nickname+'!',
+                        showConfirmButton: true,
+                        timer: 1500
+                        })
                     console.log("Usuario encontrado");
                     this.$store.commit('setUserId', data.result.userId);
                     const id = this.$store.getters['getUserId'];
@@ -47,43 +58,29 @@ export default {
 
                     this.$router.push({ name: 'TaskList' });
                 }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Login fallido',
+                        text: 'Por favor, revisa tu usuario y contraseña',
+                        showConfirmButton: true,
+                        timer: 1500
+                        })
                     console.log("Usuario no encontrado");
                     this.$router.push({ name: 'LoginView' });
-                    // return;
                 }
             } catch (error) {
-                
+                Swal.fire({
+                        icon: 'error',
+                        title: 'Login fallido',
+                        text: 'Por favor, revisa tu usuario y contraseña',
+                        showConfirmButton: true,
+                        timer: 1500
+                        })
                 console.error(error);
             }
         }
-        },
-        
-        
-    }
-
-// import {LoginService} from '../service/LoginService.js'; 
-
-// export default {
-//     setup() {
-//         const nickname = ref('');
-//         const password = ref('');
-//         const login = async () => {
-//             console.log(nickname.value);
-//             console.log(password.value);
-//             try {
-//                 const response = await LoginService.login(nickname.value, password.value);
-//                 console.log('Respuesta del servicio de inicio de sesión:', response);
-//             } catch (error) {
-//                 console.error('Error al iniciar sesión:CTM', error);
-//             }
-//         };
-//         return {
-//             nickname,
-//             password,
-//             login
-//         };
-//     }
-// };
+    },
+}
 
 </script>
 
@@ -110,5 +107,10 @@ export default {
 
 .card button {
     width: 100%;
+}
+.icon {
+    font-size: 100px;
+    color: #000;
+    margin-bottom: 20px;
 }
 </style>

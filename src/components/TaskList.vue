@@ -2,17 +2,17 @@
 
 <div class="row mx-3">
     <div class="col-md-6">
-    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-        <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" v-model="selectedFilter" value="all" checked>
-        <label  class="btn btn-outline-info" for="option1">Todas</label>
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" v-model="selectedFilter" value="all" checked>
+            <label  class="btn btn-outline-info" for="option1">Todas</label>
 
-        <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off" v-model="selectedFilter" value="pending">
-        <label class="btn btn-outline-info" for="option2">Pendientes</label>
+            <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off" v-model="selectedFilter" value="pending">
+            <label class="btn btn-outline-info" for="option2">Pendientes</label>
 
-        <input type="radio" class="btn-check" name="options" id="option4" autocomplete="off" v-model="selectedFilter" value="completed">
-        <label class="btn btn-outline-info" for="option4">Completadas</label>
+            <input type="radio" class="btn-check" name="options" id="option4" autocomplete="off" v-model="selectedFilter" value="completed">
+            <label class="btn btn-outline-info" for="option4">Completadas</label>
+        </div>
     </div>
-</div>
 </div>
 
 <br>
@@ -24,23 +24,20 @@
                         <div class="task-card">
                             <div class="task-header">
                                 <h3>{{ task.name }}</h3>
-                                <span class="task-status">{{ task.status }}</span>
-                                </div>
+                                <!-- <span class="task-status">{{ task.status }}</span> -->
+                                <span :class="task.status === 'Pendiente' ? 'task-status-pending' : 'task-status-completed'">{{ task.status }}</span>
+
+                            </div>
                                 <div class="task-details">
                                 <p class="task-description">{{ task.description }}</p>            
-                                <span class="task-date">Fecha Límite: {{ task.expiry_date }}</span>
                                 <div class="task-meta">
-                                    <!-- <span class="task-tag">Etiqueta: {{ task.tags_tag_id }}</span> -->
-                                    <span class="task-tag">Etiqueta: {{ getTagName(task.tags_tag_id) }}</span>
-                                    <!-- <button @click="completeTask(task)">Completar</button> -->
-                                    <!-- <button @click="toggleTaskStatus(task)" v-if="task.status === 'Pendiente'">Completar</button>
-                                    <button @click="toggleTaskStatus(task)" v-else>Marcar como pendiente</button> -->
-                                    
+                                    <span class="task-tag"><i class="bi bi-tag-fill"></i> {{ getTagName(task.tags_tag_id) }}</span>
                                 </div>  
+                                <span class="task-date"><i class="bi bi-alarm-fill"></i> {{ task.expiry_date }}</span>
                                 <div class="task-meta">
                                     <button class="btn btn-outline-dark btn-sm mr-2" ><i class="bi bi-pencil-fill"></i> Editar</button>
                                 
-                                    <button @click="toggleTaskStatus(task)"  class="btn btn-info btn-sm mr-2" style="background-color: #37bcb1cd">
+                                    <button @click="toggleTaskStatus(task)"  class="btn btn-info btn-sm mr-2">
                                         <!-- style="background-color: #37bcb1" -->
                                     {{ task.status === 'Completado' ? 'Marcar como pendiente' : 'Completar' }}
                                     </button>
@@ -179,6 +176,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-weight: bold;
 }
 
 .task-header h3 {
@@ -186,9 +184,14 @@ export default {
     margin: 0;
 }
 
-.task-status {
+.task-status-pending {
+    font-weight: bold;  
+    color: #ad0458;
+}
+
+.task-status-completed {
     font-weight: bold;
-    color: #4caf50; /* Color verde para Completado */
+    color: #2a8e69;
 }
 
 .task-details {
@@ -206,29 +209,19 @@ export default {
 }
 
 .task-tag {
-    color: #2196F3; /* Color azul para la etiqueta */
+    color: #2196F3;
     font-size: 15px;
+    /* font-weight: bold; */
 }
 
 .task-date {
-    color: #f44336; /* Color rojo para la fecha límite */
+    color: #f44336;
     font-size: 14px;
+    /* font-weight: bold; */
 }
 .create-task-button-container {
     text-align: center;
     margin-top: 20px;
 }
-/*
-.btn-outline-purple {
-  color: #800080;
-  background-color: #800080;  Puedes cambiar este valor al tono de morado que prefieras 
-  border-color: #800080; El mismo color que el fondo 
-}
-
-.btn-outline-purple:hover {
-  background-color: #6a006a; Cambia el color del botón cuando se pasa el mouse 
-  border-color: #6a006a;
-}*/
-
 
 </style>
