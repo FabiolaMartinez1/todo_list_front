@@ -1,7 +1,7 @@
 <template>
 
 <div class="row mx-3">
-    <div class="col-md-6">
+    <div class="col-md-6 task-meta">
         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
             <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" v-model="selectedFilter" value="all" checked>
             <label  class="btn btn-outline-info" for="option1">Todas</label>
@@ -12,6 +12,9 @@
             <input type="radio" class="btn-check" name="options" id="option4" autocomplete="off" v-model="selectedFilter" value="completed">
             <label class="btn btn-outline-info" for="option4">Completadas</label>
         </div>
+        <div>
+                <button @click="newTask" class="p-button p-button-primary" style="background-color: #0A0148">Crear Nueva Tarea</button>
+            </div>
     </div>
 </div>
 
@@ -20,38 +23,46 @@
         <TPanel header="TASKS">
             <div class="card-container">
                 <div class="p-grid p-justify-center">
-                    <div class="" v-for="task in tasks" :key="task.task_id">
-                        <div class="task-card">
-                            <div class="task-header">
-                                <h3>{{ task.name }}</h3>
-                                <!-- <span class="task-status">{{ task.status }}</span> -->
-                                <span :class="task.status === 'Pendiente' ? 'task-status-pending' : 'task-status-completed'">{{ task.status }}</span>
+                    <div v-if="tasks">
+                        <div class="" v-for="task in tasks" :key="task.task_id">
+                            <div class="task-card">
+                                <div class="task-header">
+                                    <h3>{{ task.name }}</h3>
+                                    <!-- <span class="task-status">{{ task.status }}</span> -->
+                                    <span :class="task.status === 'Pendiente' ? 'task-status-pending' : 'task-status-completed'">{{ task.status }}</span>
 
-                            </div>
-                                <div class="task-details">
-                                <p class="task-description">{{ task.description }}</p>            
-                                <div class="task-meta">
-                                    <span class="task-tag"><i class="bi bi-tag-fill"></i> {{ getTagName(task.tags_tag_id) }}</span>
-                                </div>  
-                                <span class="task-date"><i class="bi bi-alarm-fill"></i> {{ task.expiry_date }}</span>
-                                <div class="task-meta">
-                                    <button class="btn btn-outline-dark btn-sm mr-2" ><i class="bi bi-pencil-fill"></i> Editar</button>
-                                
-                                    <button @click="toggleTaskStatus(task)"  class="btn btn-info btn-sm mr-2">
-                                        <!-- style="background-color: #37bcb1" -->
-                                    {{ task.status === 'Completado' ? 'Marcar como pendiente' : 'Completar' }}
-                                    </button>
-                                    
+                                </div>
+                                    <div class="task-details">
+                                    <p class="task-description">{{ task.description }}</p>            
+                                    <div class="task-meta">
+                                        <span class="task-tag"><i class="bi bi-tag-fill"></i> {{ getTagName(task.tags_tag_id) }}</span>
+                                    </div>  
+                                    <span class="task-date"><i class="bi bi-alarm-fill"></i> {{ task.expiry_date }}</span>
+                                    <div class="task-meta">
+                                        <!-- <button class="btn btn-outline-dark btn-sm mr-2" ><i class="bi bi-pencil-fill"></i> Editar</button> -->
+                                        <button @click="editarTarea(task)" class="btn btn-outline-dark btn-sm mr-2">
+                                            <i class="bi bi-pencil-fill"></i> Editar
+                                        </button>
+
+                                        <button @click="toggleTaskStatus(task)"  class="btn btn-info btn-sm mr-2">
+                                            <!-- style="background-color: #37bcb1" -->
+                                        {{ task.status === 'Completado' ? 'Marcar como pendiente' : 'Completar' }}
+                                        </button>
+                                        
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <!-- Renderizar la lista de tareas aquí -->
                     </div>
+                    <div v-else>
+                        <h4>No tienes tareas registradas</h4>
+                    </div>
+
+                    
                 </div>
             </div>
         </TPanel>
-        <div class="create-task-button-container">
-            <button @click="newTask" class="p-button p-button-primary" style="background-color: #0A0148">Crear Nueva Tarea</button>
-            </div>
     </div>
 </template>
 
@@ -149,6 +160,21 @@ export default {
                 console.error(error);
             }
         },
+        editarTarea(task) {
+            console.log("tarea a editar: "+task.task_id);
+            console.log("tarea a editar: "+JSON.stringify(task));
+            this.$router.push({
+                name: 'TaskId',
+                params: {
+                taskId: task.task_id,
+                name: task.name,
+                description: task.description,
+                status: task.status,
+                expiry_date: task.expiry_date,
+                tags_tag_id: task.tags_tag_id
+                }
+            });
+            }
     },  
     watch: {
         selectedFilter: {

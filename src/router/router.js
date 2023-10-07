@@ -27,6 +27,12 @@ const routes = [
         name: 'TagsList',
         component: TagsList 
     },
+    {
+        path: '/task/:taskId',
+        name: 'TaskId',
+        component: TaskForm,
+        props: true
+    },      
     
 ];
 

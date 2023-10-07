@@ -106,8 +106,15 @@ export default {
       const tasksAssignedToTag = this.tasks.filter(task => task.tags_tag_id === tag.tag_id);
       console.log("tasksAssignedToTag: " + tasksAssignedToTag+" # "+tasksAssignedToTag.length);
       if (tasksAssignedToTag.length > 0) {
-        const confirmDelete = window.confirm(`La etiqueta "${tag.name}" está asignada a ${tasksAssignedToTag.length} tareas. ¿Estás seguro de que deseas eliminarla?`);
-        if (!confirmDelete) {
+        const confirmDelete2 = window.confirm(`La etiqueta "${tag.name}" está asignada a ${tasksAssignedToTag.length} tareas. ¿Estás seguro de que deseas eliminarla?`);
+        const confirmDelete = await Swal.fire({
+          title: `La etiqueta "${tag.name}" está asignada a ${tasksAssignedToTag.length} tareas. ¿Estás seguro de que deseas eliminarla?`,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Sí, eliminar',
+          cancelButtonText: 'Cancelar'
+        });
+        if (confirmDelete.isConfirmed || !confirmDelete2) {
           return;
         }
       }

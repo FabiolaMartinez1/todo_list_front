@@ -5,7 +5,9 @@
   <div class="container mt-5">
     <div class="card">
       <div class="card-header text-center">
-        <h1>Nueva Tarea</h1>
+        <!-- <h1>Nueva Tarea</h1> -->
+        <h1 v-if="!$route.params.taskId">Nueva Tarea</h1>
+        <h1 v-else>Editar Tarea</h1>
       </div>
       <div class="card-body">
         <form @submit.prevent="createNewTask" >
@@ -57,6 +59,8 @@ import TagService from '../service/TagService.js';
 import Swal from 'sweetalert2'
 
 export default {
+  props: ['taskId', 'name', 'description', 'status', 'expiry_date', 'tags_tag_id'],
+
   data() {
     return {
       task: {
@@ -72,8 +76,19 @@ export default {
   async created(){
         this.taskService = new TaskService();
         this.tagService = new TagService();
-
         
+        const taskId = this.$route.params.taskId;
+        console.log('Task ID:', taskId);
+        if (taskId) {
+          this.task = {
+            task_id: this.$route.params.taskId,
+            name: this.$route.params.name,
+            status: this.$route.params.status,
+            description: this.$route.params.description,
+            expiry_date: this.$route.params.expiry_date,
+            tags_tag_id: this.$route.params.tags_tag_id
+          };
+        }
     },
   async mounted(){
     const userId = this.$store.getters['getUserId'];
@@ -88,6 +103,7 @@ export default {
           this.task = tareaGuardada;
         }
   },
+
   methods: {
     async createNewTask() {
       try {
@@ -95,24 +111,59 @@ export default {
         console.log("ID del usuario reconocido en taskForm : " + userId);
         console.log("Task: "+this.task);
         console.log("Task tagId: "+this.task.tags_tag_id);
-
         const date_in_utc = this.convert_to_utc(this.task.expiry_date, 'America/La_Paz');
         this.task.expiry_date = date_in_utc.toISOString().split('T')[0];
         console.log("Task creadaUTC: "+JSON.stringify(this.task.expiry_date));
-
-        await this.taskService.createTask(this.task, userId);
         console.log("Task creada: "+JSON.stringify(this.task));
-        this.$store.commit('setUserId', userId);
-        const id = this.$store.getters['getUserId'];
-        console.log("ID del usuario reconocido para mandar a task: " + id);
-        Swal.fire({
+
+        if(this.$route.params.taskId){
+          //Actualizar tarea
+          const data = await this.taskService.updateTask(this.task.task_id, this.task, userId);
+          this.data = data.result;
+                  if(data.code !== 'TASK-000'){
+                    Swal.fire({
+                          icon: 'error',
+                          title: 'Error al actualizar la etiqueta',
+                          text: 'Por favor intente de nuevo',
+                          showConfirmButton: true,
+                          timer: 1500
+                          })
+                  }else{
+                    Swal.fire({
                         position: 'center',
                         icon: 'success',
-                        title: 'Tarea creada exitosamente',
+                        title: 'Tarea actualizada exitosamente',
                         showConfirmButton: true,
                         timer: 1500
                         })
-        this.$router.push({ name: 'TaskList' });
+                  }
+                  this.$router.push({ name: 'TaskList' });
+        }else{
+          //Crear tarea
+          const data = await this.taskService.createTask(this.task, userId);
+          this.data = data.result;
+                  if(data.code !== 'TASK-000'){
+                    Swal.fire({
+                          icon: 'error',
+                          title: 'Error al crear la tarea',
+                          text: 'Por favor intente de nuevo',
+                          showConfirmButton: true,
+                          timer: 1500
+                          })
+                  }else{
+                    this.$store.commit('setUserId', userId);
+                    const id = this.$store.getters['getUserId'];
+                    console.log("ID del usuario reconocido para mandar a task: " + id);
+                    Swal.fire({
+                                    position: 'center',
+                                    icon: 'success',
+                                    title: 'Tarea creada exitosamente',
+                                    showConfirmButton: true,
+                                    timer: 1500
+                                    })
+                    this.$router.push({ name: 'TaskList' });
+                  }
+        }
       } catch (error) {
         Swal.fire({
                         icon: 'error',

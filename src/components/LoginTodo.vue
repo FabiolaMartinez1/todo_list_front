@@ -1,4 +1,3 @@
-<!-- //TODO paginar tareas -->
 <template>
     <form @submit.prevent="login">
         <div class="login-container">
