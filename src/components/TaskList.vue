@@ -13,7 +13,7 @@
             <label class="btn btn-outline-info" for="option4">Completadas</label>
         </div>
         <div>
-                <button @click="newTask" class="p-button p-button-primary" style="background-color: #0A0148">Crear Nueva Tarea</button>
+                <button @click="newTask" class="p-button p-button-primary" style="background-color: #0A0148"><i class="bi bi-plus-circle mr-2"></i>Crear Nueva Tarea</button>
             </div>
     </div>
 </div>
@@ -47,6 +47,7 @@
                                         <button @click="toggleTaskStatus(task)"  class="btn btn-info btn-sm mr-2">
                                             <!-- style="background-color: #37bcb1" -->
                                         {{ task.status === 'Completado' ? 'Marcar como pendiente' : 'Completar' }}
+                                        <i class="bi bi-check2-circle"></i>
                                         </button>
                                         
                                     </div>

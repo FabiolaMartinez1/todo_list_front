@@ -34,7 +34,7 @@
                     <option value="" disabled selected>Selecciona una etiqueta</option>
                     <option v-for="tag in tags" :key="tag.tag_id" :value="tag.tag_id">{{ tag.name }}</option>
                   </select>
-                  <button @click="newTag" class="btn btn-info">New</button>
+                  <button @click="newTag" class="btn btn-info"><i class="bi bi-pencil-square"></i></button>
                 </div>
             </div>
           </div>
@@ -189,14 +189,6 @@ export default {
     convert_to_utc(date, frontend_timezone) {
       var date_in_utc = date;
       if(frontend_timezone=='America/La_Paz'){
-        // const offset = date.getTimezoneOffset();
-        // const date_in_frontend_timezone = new Date(date);
-        // date_in_utc = new Date(date_in_frontend_timezone.getTime() + offset * 60000);
-
-        // const dateParts = date.split('-');
-        // const date_in_frontend_timezone = new Date(dateParts[0], dateParts[1] + 1, dateParts[2]);
-        // date_in_utc = new Date(date_in_frontend_timezone.getTime() - (date_in_frontend_timezone.getTimezoneOffset() * 60000));
-        
         // Convertir la fecha a UTC
           const dateParts = date.split('-');
           const date_in_frontend_timezone = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);

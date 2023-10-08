@@ -21,7 +21,7 @@
               @click="deleteTag(index)"
               class="btn btn-danger"
             >
-              Eliminar
+            <i class="bi bi-trash3 mr-2 ml-2"></i>
             </button>
             <button
               v-if="tag.new"
@@ -33,12 +33,15 @@
           </div>
           <div class="d-flex justify-content-center">
             <button @click="addNewTag" class="btn btn-success mr-2" style="background-color: #2eae85">
+              <i class="bi bi-plus-circle mr-2"></i>
               Nuevo
             </button>
             <button @click="saveTags" class="btn btn-info mr-2">
+              <i class="bi bi-save2 mr-2"></i>
               Guardar
             </button>
             <button @click="cancelEdit" class="btn btn-secondary" style="background-color: #0A0148">
+              <i class="bi bi-x-circle mr-2"></i>
               Cerrar
             </button>
           </div>
@@ -106,34 +109,32 @@ export default {
       const tasksAssignedToTag = this.tasks.filter(task => task.tags_tag_id === tag.tag_id);
       console.log("tasksAssignedToTag: " + tasksAssignedToTag+" # "+tasksAssignedToTag.length);
       if (tasksAssignedToTag.length > 0) {
-        const confirmDelete2 = window.confirm(`La etiqueta "${tag.name}" está asignada a ${tasksAssignedToTag.length} tareas. ¿Estás seguro de que deseas eliminarla?`);
-        const confirmDelete = await Swal.fire({
-          title: `La etiqueta "${tag.name}" está asignada a ${tasksAssignedToTag.length} tareas. ¿Estás seguro de que deseas eliminarla?`,
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'Sí, eliminar',
-          cancelButtonText: 'Cancelar'
-        });
-        if (confirmDelete.isConfirmed || !confirmDelete2) {
+        const confirmDelete = window.confirm(`La etiqueta "${tag.name}" está asignada a ${tasksAssignedToTag.length} tareas. ¿Estás seguro de que deseas eliminarla?`);
+        if (!confirmDelete) {
+          console.info("Las tareas no se kes eliminarán las tags");
           return;
+        }else{
+          for (const task of tasksAssignedToTag) {
+            task.tags_tag_id = null;
+            //Actualizar Tasks
+            const data = await this.taskService.updateTask(task.task_id, task, userId);
+            this.data = data.result;
+                    if(data.code !== 'TASK-000'){
+                      Swal.fire({
+                            icon: 'error',
+                            title: 'Error al actualizar la etiqueta',
+                            text: 'Por favor intente de nuevo',
+                            showConfirmButton: true,
+                            timer: 1500
+                            })
+                      break;
+                    }else{
+                      console.log("Se actualizó la tarea: " + task.task_id + " " + task.name + " " + userId);
+                    }
+          }
         }
       }
-      for (const task of tasksAssignedToTag) {
-        task.tags_tag_id = null;
-        //Actualizar Tasks
-        const data = await this.taskService.updateTask(task.task_id, task, userId);
-        this.data = data.result;
-                if(data.code !== 'TASK-000'){
-                  Swal.fire({
-                        icon: 'error',
-                        title: 'Error al actualizar la etiqueta',
-                        text: 'Por favor intente de nuevo',
-                        showConfirmButton: true,
-                        timer: 1500
-                        })
-                  break;
-                }
-      }
+      
       console.log("Se borrará la etiqueta: " + tag.tag_id + " " + tag.name + " " + userId);
       //Eliminar Tags
       const data2 = await this.tagService.deleteTag(tag.tag_id, userId);
