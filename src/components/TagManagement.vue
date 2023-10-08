@@ -28,7 +28,7 @@
               @click="deleteNewTag(index)"
               class="btn btn-danger"
             >
-              Eliminar
+            <i class="bi bi-trash3 mr-2 ml-2"></i>
             </button>
           </div>
           <div class="d-flex justify-content-center">
@@ -87,12 +87,17 @@ export default {
             } catch (error) {
                 console.error(error);
             }
-
-        this.tempTags = JSON.parse(JSON.stringify(this.tags));
+            if(!this.tags){
+              this.tempTags = [];
+            }else{
+              this.tempTags = JSON.parse(JSON.stringify(this.tags));
+            }
+        
         // console.log("tt"+JSON.stringify(this.tempTags));
     },
   methods: {
     addNewTag() {
+      //TODO si temTags esta vacio
       this.tempTags.push({ name: '', new: true });
     },
     deleteTag(index) {
@@ -106,33 +111,37 @@ export default {
       const userId = this.$store.getters['getUserId'];
       console.log("ID del usuario reconocido en tagsDelete : " + userId);
       console.log("task :"+JSON.stringify(this.tasks));
-      const tasksAssignedToTag = this.tasks.filter(task => task.tags_tag_id === tag.tag_id);
-      console.log("tasksAssignedToTag: " + tasksAssignedToTag+" # "+tasksAssignedToTag.length);
-      if (tasksAssignedToTag.length > 0) {
-        const confirmDelete = window.confirm(`La etiqueta "${tag.name}" está asignada a ${tasksAssignedToTag.length} tareas. ¿Estás seguro de que deseas eliminarla?`);
-        if (!confirmDelete) {
-          console.info("Las tareas no se kes eliminarán las tags");
-          return;
-        }else{
-          for (const task of tasksAssignedToTag) {
-            task.tags_tag_id = null;
-            //Actualizar Tasks
-            const data = await this.taskService.updateTask(task.task_id, task, userId);
-            this.data = data.result;
-                    if(data.code !== 'TASK-000'){
-                      Swal.fire({
-                            icon: 'error',
-                            title: 'Error al actualizar la etiqueta',
-                            text: 'Por favor intente de nuevo',
-                            showConfirmButton: true,
-                            timer: 1500
-                            })
-                      break;
-                    }else{
-                      console.log("Se actualizó la tarea: " + task.task_id + " " + task.name + " " + userId);
-                    }
+      if(this.tasks){
+        const tasksAssignedToTag = this.tasks.filter(task => task.tags_tag_id === tag.tag_id);
+        console.log("tasksAssignedToTag: " + tasksAssignedToTag+" # "+tasksAssignedToTag.length);
+        if (tasksAssignedToTag.length > 0) {
+          const confirmDelete = window.confirm(`La etiqueta "${tag.name}" está asignada a ${tasksAssignedToTag.length} tareas. ¿Estás seguro de que deseas eliminarla?`);
+          if (!confirmDelete) {
+            console.info("Las tareas no se kes eliminarán las tags");
+            return;
+          }else{
+            for (const task of tasksAssignedToTag) {
+              task.tags_tag_id = null;
+              //Actualizar Tasks
+              const data = await this.taskService.updateTask(task.task_id, task, userId);
+              this.data = data.result;
+                      if(data.code !== 'TASK-000'){
+                        Swal.fire({
+                              icon: 'error',
+                              title: 'Error al actualizar la etiqueta',
+                              text: 'Por favor intente de nuevo',
+                              showConfirmButton: true,
+                              timer: 1500
+                              })
+                        break;
+                      }else{
+                        console.log("Se actualizó la tarea: " + task.task_id + " " + task.name + " " + userId);
+                      }
+            }
           }
         }
+      }else{
+        console.log("No hay tareas");
       }
       
       console.log("Se borrará la etiqueta: " + tag.tag_id + " " + tag.name + " " + userId);
@@ -149,6 +158,7 @@ export default {
                         })
                 }else{
                   this.tags = this.tags.filter(t => t.tag_id !== tag.tag_id);
+                  console.log("Se eliminó la etiqueta: " + tag.tag_id + " " + tag.name + " " + userId);
                 }
       } catch (error) {
         console.error('Error al eliminar la etiqueta:', error);
@@ -159,6 +169,7 @@ export default {
         const userId = this.$store.getters['getUserId'];
         console.log("userID save : " + userId);
         for (const tag of this.tempTags) {
+          console.log("0");
         if (tag.tag_id) {
           console.log("tagIDE "+JSON.stringify(tag));
           //Actualizar Tasks
@@ -173,6 +184,8 @@ export default {
                         timer: 1500
                         })
                   break;
+                }else{
+                  console.log("Se actualizó la etiqueta: " + tag.tag_id + " " + tag.name + " " + userId);
                 }
         } else {
           console.log("creando tag: "+tag.name+" "+userId);
@@ -183,32 +196,47 @@ export default {
                   Swal.fire({
                         icon: 'error',
                         title: 'Error al crear la etiqueta',
-                        text: 'Por favor intente de nuevo',
+                        text: 'Por favor intente de nuevo TT',
                         showConfirmButton: true,
                         timer: 1500
                         })
                   break;
+                }else{
+                  console.log("Se creó la etiqueta: " + tag.tag_id + " " + tag.name + " " + userId);
+                  console.log(this.tempTags);
+                  // if(!this.tempTags){
+                  //   break;
+                  // }
                 }
         }
       }
       const tagsToDelete = this.tags.filter(tag => !this.tempTags.some(tempTag => tempTag.tag_id === tag.tag_id));
+      console.log("1");
       for (const tag of tagsToDelete) {
+        console.log("2");
         console.log("se borrara: "+tag.tag_id+" "+tag.name+" "+userId);
+        console.log("3");
         this.confirmDeleteTag(tag);
+        console.log("4");
       }
-        console.log("A tags"+JSON.stringify(this.tags));
-        console.log("A tempTags"+JSON.stringify(this.tempTags));
+
+        // console.log("A tags"+JSON.stringify(this.tags));
+        // console.log("A tempTags"+JSON.stringify(this.tempTags));
+        console.log("5");
         this.editing = false;
+        console.log("6");
         this.tags = [...this.tempTags];
-        console.log("D tags"+JSON.stringify(this.tags));
-        console.log("D tempTags"+JSON.stringify(this.tempTags));
+        console.log("7");
+        // console.log("D tags"+JSON.stringify(this.tags));
+        // console.log("D tempTags"+JSON.stringify(this.tempTags));
         Swal.fire({
                         position: 'center',
                         icon: 'success',
                         title: 'Etiquetas actualizadas exitosamente',
                         showConfirmButton: true,
                         timer: 1500
-                        })
+                        });
+        console.log("8");
         router.push({ name: 'TaskForm' });
       } catch (error) {
         Swal.fire({
