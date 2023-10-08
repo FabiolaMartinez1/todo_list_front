@@ -41,4 +41,13 @@ const router = createRouter({
     routes,
 });
 
+router.beforeEach((to) => {
+    if (to.name === 'LoginView') {
+    const itemToRemove = localStorage.getItem('nuevaTarea');
+    if (itemToRemove) {
+        localStorage.removeItem('nuevaTarea');
+    }
+    }
+});  
+
 export default router;
